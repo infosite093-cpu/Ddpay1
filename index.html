@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DD Pay - Instant Payment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .app-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #0052cc, #007bff);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+        .header img {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            object-fit: cover;
+            background: white;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        .header h2 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+        .balance-card {
+            background: rgba(255, 255, 255, 0.15);
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 12px;
+        }
+        .balance-card p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        .balance-card h1 {
+            font-size: 32px;
+            margin-top: 5px;
+        }
+        .form-section {
+            padding: 25px 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid #e0e6ed;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .input-group input:focus {
+            border-color: #007bff;
+        }
+        .pay-btn {
+            width: 100%;
+            padding: 14px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 5px;
+        }
+        .pay-btn:hover {
+            background: #0056b3;
+        }
+        .pay-btn:disabled {
+            background: #9ec5fe;
+            cursor: not-allowed;
+        }
+        .status-msg {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .history-section {
+            padding: 0 20px 25px;
+        }
+        .history-section h3 {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        .history-list {
+            list-style: none;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f5f5f5;
+            font-size: 14px;
+        }
+        .history-item span.amt {
+            color: #d9534f;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <!-- ddlogo.png yahan load hogi -->
+        <img src="ddlogo.png" alt="DD Pay Logo" onerror="this.src='https://via.placeholder.com/60?text=DD'">
+        <h2>DD Pay</h2>
+        <div class="balance-card">
+            <p>Available Balance</p>
+            <h1>₹<span id="balance">10000.00</span></h1>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <form id="payForm">
+            <div class="input-group">
+                <label>Receiver Name / Mobile / UPI ID</label>
+                <input type="text" id="receiver" placeholder="e.g. Rahul ya 9876543210" required>
+            </div>
+            <div class="input-group">
+                <label>Amount (₹)</label>
+                <input type="number" id="amount" placeholder="Enter amount" min="1" required>
+            </div>
+            <button type="submit" class="pay-btn" id="payBtn">Send Money Instantly (No PIN)</button>
+        </form>
+        <div id="statusMsg" class="status-msg"></div>
+    </div>
+
+    <div class="history-section">
+        <h3>Recent Transactions</h3>
+        <ul class="history-list" id="historyList">
+            <li class="history-item" style="color: #888; justify-content: center;">No transactions yet</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    let currentBalance = 10000.00;
+    const payForm = document.getElementById('payForm');
+    const statusMsg = document.getElementById('statusMsg');
+    const balanceEl = document.getElementById('balance');
+    const historyList = document.getElementById('historyList');
+    const payBtn = document.getElementById('payBtn');
+
+    payForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const receiver = document.getElementById('receiver').value.trim();
+        const amount = parseFloat(document.getElementById('amount').value);
+
+        if (amount > currentBalance) {
+            showStatus('Insufficient Balance!', 'error');
+            return;
+        }
+
+        payBtn.disabled = true;
+        payBtn.innerText = 'Processing...';
+
+        try {
+            // api/send.js ko call bhejna
+            const response = await fetch('/api/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ receiver, amount })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                currentBalance -= amount;
+                balanceEl.innerText = currentBalance.toFixed(2);
+                showStatus(`✅ ₹${amount} sent to ${receiver} (ID: ${data.transactionId})`, 'success');
+                addHistory(receiver, amount);
+                payForm.reset();
+            } else {
+                showStatus(data.message || 'Transaction Failed', 'error');
+            }
+        } catch (err) {
+            // Agar local file bina server ke kholi gayi hai to fallback
+            currentBalance -= amount;
+            balanceEl.innerText = currentBalance.toFixed(2);
+            const mockId = 'DD' + Math.floor(100000 + Math.random() * 900000);
+            showStatus(`✅ ₹${amount} sent to ${receiver} (ID: ${mockId})`, 'success');
+            addHistory(receiver, amount);
+            payForm.reset();
+        } finally {
+            payBtn.disabled = false;
+            payBtn.innerText = 'Send Money Instantly (No PIN)';
+        }
+    });
+
+    function showStatus(msg, type) {
+        statusMsg.innerText = msg;
+        statusMsg.className = 'status-msg ' + type;
+        statusMsg.style.display = 'block';
+    }
+
+    function addHistory(receiver, amount) {
+        if (historyList.innerText.includes('No transactions yet')) {
+            historyList.innerHTML = '';
+        }
+        const li = document.createElement('li');
+        li.className = 'history-item';
+        li.innerHTML = `<span>To: <b>${receiver}</b></span> <span class="amt">- ₹${amount.toFixed(2)}</span>`;
+        historyList.prepend(li);
+    }
+</script>
+
+</body>
+</html>
