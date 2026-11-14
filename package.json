@@ -1,0 +1,10 @@
+{
+  "name": "ddpay",
+  "version": "1.0.0",
+  "description": "DD Pay Instant Transfer System without PIN",
+  "main": "api/send.js",
+  "scripts": {
+    "start": "node api/send.js"
+  },
+  "dependencies": {}
+}
