@@ -1,7 +1,7 @@
 {
   "name": "ddpay",
   "version": "1.0.0",
-  "description": "DD Pay Instant Transfer System without PIN",
+  "description": "DD Pay Secure Payment Portal - White Theme",
   "main": "api/send.js",
   "scripts": {
     "start": "node api/send.js"
