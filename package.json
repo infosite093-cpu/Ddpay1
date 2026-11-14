@@ -1,10 +1,11 @@
 {
   "name": "ddpay",
   "version": "1.0.0",
-  "description": "DD Pay Secure Payment Portal - White Theme",
-  "main": "api/send.js",
-  "scripts": {
-    "start": "node api/send.js"
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
 }
